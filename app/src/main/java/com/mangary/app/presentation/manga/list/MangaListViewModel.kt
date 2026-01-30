@@ -1,7 +1,5 @@
 package com.mangary.app.presentation.manga.list
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mangary.app.domain.model.Manga
@@ -9,6 +7,9 @@ import com.mangary.app.domain.model.Result
 import com.mangary.app.domain.usecase.GetMangaListUseCase
 import com.mangary.app.domain.usecase.SearchMangaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,14 +23,8 @@ class MangaListViewModel @Inject constructor(
     private val searchMangaUseCase: SearchMangaUseCase
 ) : ViewModel() {
     
-    private val _mangaList = MutableLiveData<List<Manga>>()
-    val mangaList: LiveData<List<Manga>> = _mangaList
-    
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-    
-    private val _error = MutableLiveData<String?>()
-    val error: LiveData<String?> = _error
+    private val _uiState = MutableStateFlow(MangaListUiState())
+    val uiState: StateFlow<MangaListUiState> = _uiState.asStateFlow()
     
     private var currentOffset = 0
     private val limit = 20
@@ -43,20 +38,25 @@ class MangaListViewModel @Inject constructor(
      */
     fun loadMangaList() {
         viewModelScope.launch {
-            _isLoading.value = true
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             when (val result = getMangaListUseCase(limit, currentOffset)) {
                 is Result.Success -> {
-                    _mangaList.value = result.data
-                    _error.value = null
+                    _uiState.value = _uiState.value.copy(
+                        mangaList = result.data,
+                        isLoading = false,
+                        error = null
+                    )
                 }
                 is Result.Error -> {
-                    _error.value = result.message
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
                 }
                 is Result.Loading -> {
-                    // Loading state managed by _isLoading
+                    // Loading state managed by isLoading
                 }
             }
-            _isLoading.value = false
         }
     }
     
@@ -71,20 +71,25 @@ class MangaListViewModel @Inject constructor(
         
         currentOffset = 0  // Reset offset when searching
         viewModelScope.launch {
-            _isLoading.value = true
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             when (val result = searchMangaUseCase(query, limit, 0)) {
                 is Result.Success -> {
-                    _mangaList.value = result.data
-                    _error.value = null
+                    _uiState.value = _uiState.value.copy(
+                        mangaList = result.data,
+                        isLoading = false,
+                        error = null
+                    )
                 }
                 is Result.Error -> {
-                    _error.value = result.message
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = result.message
+                    )
                 }
                 is Result.Loading -> {
-                    // Loading state managed by _isLoading
+                    // Loading state managed by isLoading
                 }
             }
-            _isLoading.value = false
         }
     }
     
@@ -96,3 +101,12 @@ class MangaListViewModel @Inject constructor(
         loadMangaList()
     }
 }
+
+/**
+ * UI State for manga list screen
+ */
+data class MangaListUiState(
+    val mangaList: List<Manga> = emptyList(),
+    val isLoading: Boolean = false,
+    val error: String? = null
+)

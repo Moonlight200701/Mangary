@@ -1,108 +1,68 @@
 package com.mangary.app.presentation.manga.list
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.mangary.app.databinding.ActivityMainBinding
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mangary.app.domain.model.Manga
+import com.mangary.app.presentation.theme.MangaryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
- * Main Activity displaying list of manga
+ * Main Activity displaying list of manga with Jetpack Compose
  * Part of presentation layer - handles UI interaction
  */
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     
-    private lateinit var binding: ActivityMainBinding
     private val viewModel: MangaListViewModel by viewModels()
-    private lateinit var adapter: MangaListAdapter
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        
-        setupRecyclerView()
-        setupSearchView()
-        observeViewModel()
-        setupSwipeRefresh()
-    }
-    
-    private fun setupRecyclerView() {
-        adapter = MangaListAdapter { manga ->
-            onMangaClick(manga)
-        }
-        
-        binding.rvMangaList.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = this@MainActivity.adapter
-        }
-    }
-    
-    private fun setupSearchView() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                query?.let {
-                    viewModel.searchManga(it)
+        setContent {
+            MangaryTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    MangaListScreenWrapper(
+                        viewModel = viewModel,
+                        onMangaClick = { manga ->
+                            // TODO: Navigate to manga detail screen
+                            Toast.makeText(
+                                this,
+                                "Selected: ${manga.title}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    )
                 }
-                return true
-            }
-            
-            override fun onQueryTextChange(newText: String?): Boolean {
-                // Optional: implement real-time search
-                return false
-            }
-        })
-    }
-    
-    private fun setupSwipeRefresh() {
-        binding.swipeRefresh.setOnRefreshListener {
-            viewModel.retry()
-        }
-    }
-    
-    private fun observeViewModel() {
-        viewModel.mangaList.observe(this) { mangaList ->
-            adapter.submitList(mangaList)
-        }
-        
-        viewModel.isLoading.observe(this) { isLoading ->
-            binding.swipeRefresh.isRefreshing = isLoading
-            binding.progressBar.visibility = if (isLoading && adapter.itemCount == 0) {
-                View.VISIBLE
-            } else {
-                View.GONE
             }
         }
-        
-        viewModel.error.observe(this) { error ->
-            if (error != null && error.isNotEmpty()) {
-                binding.tvError.apply {
-                    text = error
-                    visibility = View.VISIBLE
-                }
-                binding.btnRetry.apply {
-                    visibility = View.VISIBLE
-                    setOnClickListener {
-                        viewModel.retry()
-                        visibility = View.GONE
-                        binding.tvError.visibility = View.GONE
-                    }
-                }
-            } else {
-                binding.tvError.visibility = View.GONE
-                binding.btnRetry.visibility = View.GONE
-            }
-        }
-    }
-    
-    private fun onMangaClick(manga: Manga) {
-        // TODO: Navigate to manga detail screen
-        Toast.makeText(this, "Selected: ${manga.title}", Toast.LENGTH_SHORT).show()
     }
 }
+
+@Composable
+private fun MangaListScreenWrapper(
+    viewModel: MangaListViewModel,
+    onMangaClick: (Manga) -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    
+    MangaListScreen(
+        uiState = uiState,
+        onSearchQuery = { query -> viewModel.searchManga(query) },
+        onRetry = { viewModel.retry() },
+        onRefresh = { viewModel.retry() },
+        onMangaClick = onMangaClick
+    )
+}
+
