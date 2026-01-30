@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mangary</string>
+    <string name="manga_cover">Manga Cover</string>
+    <string name="search_hint">Search manga...</string>
+    <string name="retry">Retry</string>
+    <string name="error_loading">Error loading manga</string>
+    <string name="no_manga_found">No manga found</string>
+</resources>
