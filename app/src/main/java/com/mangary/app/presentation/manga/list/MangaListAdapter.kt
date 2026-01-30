@@ -39,7 +39,11 @@ class MangaListAdapter(
         fun bind(manga: Manga) {
             titleText.text = manga.title
             statusText.text = "Status: ${manga.status}"
-            descriptionText.text = manga.description.take(150) + if (manga.description.length > 150) "..." else ""
+            descriptionText.text = if (manga.description.length > 150) {
+                manga.description.take(150) + "..."
+            } else {
+                manga.description
+            }
             
             // Load cover image using Coil
             coverImage.load(manga.coverImageUrl) {

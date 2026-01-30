@@ -18,9 +18,14 @@ class MangaRepositoryImpl @Inject constructor(
     override suspend fun getMangaList(limit: Int, offset: Int): Result<List<Manga>> {
         return try {
             val response = apiService.getMangaList(limit, offset)
-            if (response.isSuccessful && response.body() != null) {
-                val mangaList = response.body()!!.data.map { it.toDomainModel() }
-                Result.Success(mangaList)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val mangaList = body.data.map { it.toDomainModel() }
+                    Result.Success(mangaList)
+                } else {
+                    Result.Error("Response body is null")
+                }
             } else {
                 Result.Error("Failed to fetch manga list: ${response.message()}")
             }
@@ -32,12 +37,17 @@ class MangaRepositoryImpl @Inject constructor(
     override suspend fun getMangaById(mangaId: String): Result<Manga> {
         return try {
             val response = apiService.getMangaById(mangaId)
-            if (response.isSuccessful && response.body() != null) {
-                val mangaData = response.body()!!.data.firstOrNull()
-                if (mangaData != null) {
-                    Result.Success(mangaData.toDomainModel())
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val mangaData = body.data.firstOrNull()
+                    if (mangaData != null) {
+                        Result.Success(mangaData.toDomainModel())
+                    } else {
+                        Result.Error("Manga not found")
+                    }
                 } else {
-                    Result.Error("Manga not found")
+                    Result.Error("Response body is null")
                 }
             } else {
                 Result.Error("Failed to fetch manga: ${response.message()}")
@@ -50,9 +60,14 @@ class MangaRepositoryImpl @Inject constructor(
     override suspend fun searchManga(query: String, limit: Int, offset: Int): Result<List<Manga>> {
         return try {
             val response = apiService.searchManga(query, limit, offset)
-            if (response.isSuccessful && response.body() != null) {
-                val mangaList = response.body()!!.data.map { it.toDomainModel() }
-                Result.Success(mangaList)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    val mangaList = body.data.map { it.toDomainModel() }
+                    Result.Success(mangaList)
+                } else {
+                    Result.Error("Response body is null")
+                }
             } else {
                 Result.Error("Failed to search manga: ${response.message()}")
             }

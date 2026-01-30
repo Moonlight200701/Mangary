@@ -28,8 +28,8 @@ class MangaListViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
     
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
     
     private var currentOffset = 0
     private val limit = 20
@@ -47,13 +47,13 @@ class MangaListViewModel @Inject constructor(
             when (val result = getMangaListUseCase(limit, currentOffset)) {
                 is Result.Success -> {
                     _mangaList.value = result.data
-                    _error.value = ""
+                    _error.value = null
                 }
                 is Result.Error -> {
                     _error.value = result.message
                 }
                 is Result.Loading -> {
-                    // Already handled
+                    // Loading state managed by _isLoading
                 }
             }
             _isLoading.value = false
@@ -69,42 +69,22 @@ class MangaListViewModel @Inject constructor(
             return
         }
         
+        currentOffset = 0  // Reset offset when searching
         viewModelScope.launch {
             _isLoading.value = true
             when (val result = searchMangaUseCase(query, limit, 0)) {
                 is Result.Success -> {
                     _mangaList.value = result.data
-                    _error.value = ""
+                    _error.value = null
                 }
                 is Result.Error -> {
                     _error.value = result.message
                 }
                 is Result.Loading -> {
-                    // Already handled
+                    // Loading state managed by _isLoading
                 }
             }
             _isLoading.value = false
-        }
-    }
-    
-    /**
-     * Load more manga (pagination)
-     */
-    fun loadMoreManga() {
-        currentOffset += limit
-        viewModelScope.launch {
-            when (val result = getMangaListUseCase(limit, currentOffset)) {
-                is Result.Success -> {
-                    val currentList = _mangaList.value ?: emptyList()
-                    _mangaList.value = currentList + result.data
-                }
-                is Result.Error -> {
-                    _error.value = result.message
-                }
-                is Result.Loading -> {
-                    // Already handled
-                }
-            }
         }
     }
     

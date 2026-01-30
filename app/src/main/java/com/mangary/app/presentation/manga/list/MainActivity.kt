@@ -81,8 +81,7 @@ class MainActivity : AppCompatActivity() {
         }
         
         viewModel.error.observe(this) { error ->
-            if (error.isNotEmpty()) {
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+            if (error != null && error.isNotEmpty()) {
                 binding.tvError.apply {
                     text = error
                     visibility = View.VISIBLE
