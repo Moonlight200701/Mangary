@@ -4,7 +4,6 @@ import com.example.mangary3.data.remote.responses.MangaFromAPIDTO
 
 interface GeneralMangaRepository {
     suspend fun getMangas(): List<MangaFromAPIDTO>
-    suspend fun getMangaById(id: String): MangaFromAPIDTO
 
     suspend fun getMangaByGenre(): List<MangaFromAPIDTO>
 

@@ -1,7 +1,7 @@
 package com.example.mangary3.data.remote
 
 import com.example.mangary3.data.remote.responses.MangaResponses
-import com.example.mangary3.domain.model.MangaDetailResponse
+import com.example.mangary3.data.MangaDetailResponseDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -14,7 +14,7 @@ interface MangaAPIService {
     ): MangaResponses
 
     @GET("manga/{id}")
-    suspend fun getMangaById(@Path("id") id: String): MangaDetailResponse
+    suspend fun getMangaById(@Path("id") id: String): MangaDetailResponseDTO
 
     @GET("manga")
     suspend fun getMangasFromSource(

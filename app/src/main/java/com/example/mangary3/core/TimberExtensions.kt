@@ -2,8 +2,10 @@ package com.example.mangary3.core
 
 import timber.log.Timber
 
-fun Timber.Companion.logDebug(tag: String, message: String) =
-    Timber.d("$tag: $message")
+fun Timber.Tree.logError(className: String, throwable: Throwable) {
+    Timber.tag(className).e(throwable)
+}
 
-fun Timber.logError(className: String, throwable: Throwable) =
-    Timber.e(throwable, "$className: ${throwable.message}")
+fun logError(className: String, throwable: Throwable) {
+    Timber.tag(className).e(throwable)
+}

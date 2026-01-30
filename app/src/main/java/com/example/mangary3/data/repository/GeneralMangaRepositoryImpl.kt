@@ -1,6 +1,5 @@
 package com.example.mangary3.data.repository
 
-import android.util.Log
 import com.example.mangary3.data.remote.MangaAPIService
 import com.example.mangary3.data.remote.responses.MangaFromAPIDTO
 import com.example.mangary3.domain.repository.GeneralMangaRepository
@@ -13,17 +12,9 @@ class GeneralMangaRepositoryImpl @Inject constructor(private val mangaApi: Manga
         try {
             mangaApi.getMangasFromSource().data
         } catch (e: Exception) {
-            Timber.logDebug
+            Timber.e(e)
             emptyList()
         }
-
-    override suspend fun getMangaById(id: String): MangaFromAPIDTO {
-        try {
-            mangaApi.getMangaById(id).data
-        } catch (
-
-        )
-    }
 
     override suspend fun getMangaByGenre(): List<MangaFromAPIDTO> {
         TODO("Not yet implemented")
