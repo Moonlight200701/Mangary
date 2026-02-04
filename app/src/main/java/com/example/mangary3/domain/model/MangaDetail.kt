@@ -4,5 +4,5 @@ import com.google.gson.annotations.SerializedName
 
 data class MangaDetail (
     @SerializedName("result") val result: String,
-    @SerializedName("data") val data: MangaFromAPI
+    @SerializedName("data") val data: Manga
 )

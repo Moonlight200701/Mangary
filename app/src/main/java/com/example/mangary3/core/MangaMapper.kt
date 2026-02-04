@@ -1,21 +1,34 @@
 package com.example.mangary3.core
 
-import com.example.mangary3.data.remote.responses.MangaAttributesDTO
-import com.example.mangary3.data.remote.responses.MangaFromAPIDTO
-import com.example.mangary3.data.MangaAttributesDTO
-import com.example.mangary3.data.MangaDetailResponseDTO
-import com.example.mangary3.data.MangaFromAPIDTO
+import com.example.mangary3.data.remote.dto.MangaAttributesDTO
+import com.example.mangary3.data.remote.dto.MangaDTO
+import com.example.mangary3.data.remote.dto.MangaTagAttributesDTO
+import com.example.mangary3.data.remote.dto.MangaTagDTO
+import com.example.mangary3.domain.model.Manga
+import com.example.mangary3.domain.model.MangaAttributes
+import com.example.mangary3.domain.model.MangaTag
+import com.example.mangary3.domain.model.MangaTagAttributes
 
-fun MangaFromAPIDTO.toModel() = MangaFromAPIDTO(
-    id = id,
-    type = type,
-    attributes = attributes.toModel()
+fun MangaDTO.toModel(): Manga =
+    Manga(
+        id = id,
+        type = type,
+        attributes = attributes.toModel(),
 
-)
+    )
 
-fun MangaAttributesDTO.toModel() = com.example.mangary3.data.MangaAttributesDTO(
+
+fun MangaAttributesDTO.toModel() = MangaAttributes(
     title = title,
     description = description
 )
 
-fun MangaDetailResponseDTO.toDTO()
+fun MangaTagAttributesDTO.toModel() = MangaTagAttributes(
+    name = name
+)
+
+fun MangaTagDTO.toModel() = MangaTag(
+    id = id,
+    type = type,
+    attributes = attributes.toModel()
+)

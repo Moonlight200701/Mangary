@@ -12,5 +12,7 @@ class Constants {
         const val MANGA_READING_SCREEN = "manga_reading_screen"
 
         const val MANGA_FROM_SOURCE = "manga"
+        const val MANGA_TAG_KEY = "en"
+        const val MANGA_COVER_IMAG = "https://uploads.mangadex.org/covers/"
     }
 }

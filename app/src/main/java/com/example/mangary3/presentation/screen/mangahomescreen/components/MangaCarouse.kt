@@ -1,18 +1,21 @@
 package com.example.mangary3.presentation.screen.mangahomescreen.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -31,31 +34,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mangary3.R
-import com.example.mangary3.data.remote.responses.MangaFromAPIDTO
+import com.example.mangary3.domain.model.Manga
 import com.example.mangary3.presentation.viewmodel.mangahomeviewmodel.MangaHomeViewModel
 
 @Composable
-fun MangaCarousel(
-    modifier: Modifier,
-    title: String,
+fun AnimatedMangaCarousel(
+    modifier: Modifier = Modifier,
+    mangas: List<Manga>,
     viewModel: MangaHomeViewModel = hiltViewModel(),
-    onClick: () -> Unit,
+    onClick: (Manga) -> Unit,
 ) {
     val uiState by viewModel.mangaPagerUiState.collectAsState()
-    Column {
-        Text(title, style = MaterialTheme.typography.titleLarge)
-        Spacer(modifier.height(8.dp))
+    Column(modifier = modifier) {
         if (uiState.mangaList.isEmpty()) {
-            CircularProgressIndicator()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         } else {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(uiState.mangaList.size) { index ->
-                    val currentManga = uiState.mangaList[index]
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        MangaItem(currentManga) {
-                            onClick()
-                        }
-                    }
+            LazyRow(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(uiState.mangaList, key = { it.id }) { manga ->
+                    AnimatedMangaItem(manga = manga, onClick = onClick)
                 }
             }
         }
@@ -63,12 +69,15 @@ fun MangaCarousel(
 }
 
 @Composable
-fun MangaItem(manga: MangaFromAPIDTO, onClick: (MangaFromAPIDTO) -> Unit) {
+fun AnimatedMangaItem(manga: Manga, onClick: (Manga) -> Unit) {
     Box(
         modifier = Modifier
             .wrapContentSize()
             .clickable { onClick(manga) }
-            .background(Color.Transparent),
+            .background(Color.Transparent)
+            .animateContentSize(
+                animationSpec = tween(durationMillis = 300),
+            ), // Adds animation when items are reordered
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -82,10 +91,9 @@ fun MangaItem(manga: MangaFromAPIDTO, onClick: (MangaFromAPIDTO) -> Unit) {
                     .size(120.dp, 160.dp)
                     .clip(RoundedCornerShape(12.dp))
                     .background(Color.LightGray),
-
-                )
+            )
             Text(
-                manga.attributes.title["en"] ?: "No title",
+                text = manga.attributes.title["en"] ?: "No title",
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

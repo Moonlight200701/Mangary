@@ -1,10 +1,12 @@
 package com.example.mangary3.presentation.state
 
-import com.example.mangary3.data.remote.responses.MangaFromAPIDTO
+import com.example.mangary3.domain.model.Manga
 
 data class MangaPagerUiState(
-    val mangaList: List<MangaFromAPIDTO> = emptyList(),
-    val isLoading: Boolean = true,
-    val isLoadMore: Boolean = false,
-    val errorMessage: String? = null
+    val mangaList: List<Manga> = emptyList(),
+    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val errorMessage: String? = null,
+    val selectedCategory: String = "All",
+    val searchQuery: String = ""
 )

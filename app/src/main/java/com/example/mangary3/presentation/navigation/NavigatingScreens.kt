@@ -18,7 +18,7 @@ fun NavigateScreen(
         modifier = Modifier
     ) {
         mangaHomeScreen {
-            navController.navigate(Constants.MANGA_HOME_SCREEN)
+            navController.navigate(Constants.MANGA_DETAIL_SCREEN)
         }
         mangaDetailScreen {
             navController.popBackStack()
