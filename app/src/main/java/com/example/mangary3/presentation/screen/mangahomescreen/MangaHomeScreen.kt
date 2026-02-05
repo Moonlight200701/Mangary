@@ -103,7 +103,6 @@ fun MangaHomeScreen(
 
                 item {
                     AnimatedMangaCarousel(
-                        mangas = uiState.mangaList,
                         onClick = onMangaCarouselClick
                     )
                 }
@@ -114,7 +113,7 @@ fun MangaHomeScreen(
 
                 item {
                     AnimatedMangaCarousel(
-                        mangas = uiState.mangaList.reversed(),
+//                        mangas = uiState.mangaList.reversed(),
                         onClick = onMangaCarouselClick
                     )
                 }

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class MangaRelationshipDTO (
     val id: String,
     val type: String,
-    @SerializedName("attributes") val attributes: CoverAttributesDTO
+    @SerializedName("attributes") val attributes: CoverAttributesDTO?
 )
 
 data class CoverAttributesDTO(

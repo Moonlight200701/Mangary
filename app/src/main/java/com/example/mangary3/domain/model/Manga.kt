@@ -1,5 +1,8 @@
 package com.example.mangary3.domain.model
 
+import com.example.mangary3.core.Constants
+import timber.log.Timber
+
 data class Manga(
     val id: String,
     val type: String,
@@ -7,8 +10,13 @@ data class Manga(
     val relationship: List<MangaRelationship> = emptyList()
 ) {
     fun getCoverArtUrl(): String? {
-        val coverart = relationship.find { it.type == "cover_art" }
-        val fileName = coverart?.attributes?.fileName ?: return null
-        return ""
+        try {
+            val coverArt = relationship.find { it.type == Constants.MANGA_COVER_ART_KEY }
+            val fileName = coverArt?.attributes?.fileName ?: return null
+            return Constants.MANGA_COVER_IMAG + id + "/" + fileName
+        } catch (e: Exception) {
+            Timber.e("Fail to get cover art: $e")
+            return null
+        }
     }
 }

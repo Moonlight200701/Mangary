@@ -34,7 +34,7 @@ fun AppBottomNavigationBar(navController: NavHostController) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.85f) // Độ rộng thanh bar (85% chiều ngang)
+                .fillMaxWidth(0.85f)
                 .height(64.dp)
                 .shadow(
                     elevation = 15.dp,
@@ -42,8 +42,8 @@ fun AppBottomNavigationBar(navController: NavHostController) {
                     ambientColor = Color.Black,
                     spotColor = Color.Black
                 )
-                .clip(RoundedCornerShape(25.dp)) // Bo góc cho background
-                .background(Color(0xFF1A1A1A)) // Màu đen mờ (Dark Grey)
+                .clip(RoundedCornerShape(25.dp))
+                .background(Color(0xFF1A1A1A))
         ){
             Row(
                 modifier = Modifier

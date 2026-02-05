@@ -2,7 +2,6 @@ package com.example.mangary3.presentation.screen.mangahomescreen.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,19 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.mangary3.R
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.mangary3.domain.model.Manga
 import com.example.mangary3.presentation.viewmodel.mangahomeviewmodel.MangaHomeViewModel
 
 @Composable
 fun AnimatedMangaCarousel(
     modifier: Modifier = Modifier,
-    mangas: List<Manga>,
     viewModel: MangaHomeViewModel = hiltViewModel(),
     onClick: (Manga) -> Unit,
 ) {
@@ -68,6 +66,7 @@ fun AnimatedMangaCarousel(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun AnimatedMangaItem(manga: Manga, onClick: (Manga) -> Unit) {
     Box(
@@ -83,14 +82,14 @@ fun AnimatedMangaItem(manga: Manga, onClick: (Manga) -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.dummy_image),
-                contentDescription = "Dummy test",
+            GlideImage(
+                model = manga.getCoverArtUrl() ?: "",
+                contentDescription = manga.attributes.title["en"],
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(120.dp, 160.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.LightGray),
+                    .size(120.dp, 180.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable(onClick = { onClick(manga) })
             )
             Text(
                 text = manga.attributes.title["en"] ?: "No title",

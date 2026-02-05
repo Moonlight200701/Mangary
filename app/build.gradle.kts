@@ -77,6 +77,7 @@ dependencies {
     //Navigation For Compose
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.glide.compose)
 
 
     implementation(libs.androidx.window)
