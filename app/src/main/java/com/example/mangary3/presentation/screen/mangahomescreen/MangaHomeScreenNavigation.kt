@@ -2,12 +2,12 @@ package com.example.mangary3.presentation.screen.mangahomescreen
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 
 fun NavGraphBuilder.mangaHomeScreen(
     onClick: () -> Unit
 ) {
-    composable(route = Constants.MANGA_HOME_SCREEN){
+    composable(route = APIConstants.MANGA_HOME_SCREEN){
         MangaHomeScreen(
             onClick = onClick,
         )

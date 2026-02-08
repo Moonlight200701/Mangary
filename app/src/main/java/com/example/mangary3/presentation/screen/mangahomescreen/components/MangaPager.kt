@@ -35,7 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
-import com.example.mangary3.core.Constants.Companion.MANGA_TAG_KEY
+import com.example.mangary3.core.constants.MangaConstants
 import com.example.mangary3.domain.model.Manga
 import kotlinx.coroutines.delay
 import kotlin.math.absoluteValue
@@ -86,7 +86,7 @@ fun AnimatedMangaPager(
             ) {
                 Box(modifier = Modifier.fillMaxSize()) {
                     Text(
-                        text = mangas[page].attributes.title.getOrDefault(MANGA_TAG_KEY, "No title"),
+                        text = mangas[page].attributes.title.getOrDefault(MangaConstants.MANGA_NAME_KEY, "No title"),
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .padding(16.dp),

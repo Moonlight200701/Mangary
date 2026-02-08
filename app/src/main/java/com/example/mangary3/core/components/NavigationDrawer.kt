@@ -27,7 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mangary3.R
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 
 @Composable
 fun DrawerHeader() {
@@ -94,8 +94,8 @@ fun DrawerContent(
         DrawerNavigationItem(
             icon = painterResource(R.drawable.home),
             label = "Home",
-            selected = currentRoute == Constants.MANGA_HOME_SCREEN,
-            onClick = { onNavigate(Constants.MANGA_HOME_SCREEN) }
+            selected = currentRoute == APIConstants.MANGA_HOME_SCREEN,
+            onClick = { onNavigate(APIConstants.MANGA_HOME_SCREEN) }
         )
 
         HorizontalDivider()

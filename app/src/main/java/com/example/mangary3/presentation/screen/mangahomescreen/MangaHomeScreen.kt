@@ -32,11 +32,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mangary3.R
 import com.example.mangary3.core.components.LoadingShimmer
 import com.example.mangary3.domain.model.Manga
+import com.example.mangary3.presentation.navigation.AppBottomNavigationBar
 import com.example.mangary3.presentation.screen.mangahomescreen.components.AnimatedCategoryChips
 import com.example.mangary3.presentation.screen.mangahomescreen.components.AnimatedMangaCarousel
 import com.example.mangary3.presentation.screen.mangahomescreen.components.AnimatedMangaPager
-import com.example.mangary3.presentation.screen.mangahomescreen.components.AnimatedSearchBar
-import com.example.mangary3.presentation.viewmodel.mangahomeviewmodel.MangaHomeViewModel
+import com.example.mangary3.presentation.screen.mangahomescreen.mangahomeviewmodel.MangaHomeScreenUIState
+import com.example.mangary3.presentation.screen.mangahomescreen.mangahomeviewmodel.MangaHomeViewModel
+import com.example.mangary3.presentation.screen.mangasearchscreen.components.AnimatedSearchBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +47,7 @@ fun MangaHomeScreen(
     onClick: () -> Unit = { },
     onMangaCarouselClick: (Manga) -> Unit = {}
 ) {
-    val uiState by mangaHomeViewModel.mangaPagerUiState.collectAsState()
+    val uiState by mangaHomeViewModel.uiState.collectAsState()
     val tags by mangaHomeViewModel.tags.collectAsState()
     val pullRefreshState = rememberPullToRefreshState()
 
@@ -55,73 +57,106 @@ fun MangaHomeScreen(
         }
     }
 
-    PullToRefreshBox (
-        isRefreshing = uiState.isRefreshing,
+    PullToRefreshBox(
+        isRefreshing = uiState is MangaHomeScreenUIState.Refreshing,
         onRefresh = { mangaHomeViewModel.refresh() },
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
-        AnimatedVisibility(
-            visible = !uiState.isLoading,
-            enter = fadeIn(animationSpec = tween(300))
-//                    + slideInVertically(
-//                initialOffsetY = { it / 4 }
-//            ),
-                    ,
-            exit = fadeOut()
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                item {
-                    AnimatedSearchBar(
-                        query = uiState.searchQuery,
-                        onQueryChange = { mangaHomeViewModel.updateSearchQuery(it) }
-                    )
+        when (val state = uiState) {
+            is MangaHomeScreenUIState.Initial -> {
+                // Show initial state or nothing
+            }
+
+            is MangaHomeScreenUIState.Loading -> {
+                LoadingShimmer()
+            }
+
+            is MangaHomeScreenUIState.Success,
+            is MangaHomeScreenUIState.Refreshing -> {
+                val mangaList = when (state) {
+                    is MangaHomeScreenUIState.Success -> state.mangaList
+                    is MangaHomeScreenUIState.Refreshing -> state.mangaList
+                    else -> emptyList()
+                }
+                val searchQuery = when (state) {
+                    is MangaHomeScreenUIState.Success -> state.searchQuery
+                    is MangaHomeScreenUIState.Refreshing -> state.searchQuery
+                    else -> ""
+                }
+                val selectedCategory = when (state) {
+                    is MangaHomeScreenUIState.Success -> state.selectedCategory
+                    is MangaHomeScreenUIState.Refreshing -> state.selectedCategory
+                    else -> "All"
                 }
 
-                item {
-                    AnimatedCategoryChips(
-                        categories = tags,
-                        selectedCategory = uiState.selectedCategory,
-                        onCategorySelected = { mangaHomeViewModel.updateCategory(it) }
-                    )
-                }
+                AnimatedVisibility(
+                    visible = true,
+                    enter = fadeIn(animationSpec = tween(300)),
+                    exit = fadeOut()
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        item {
+                            AnimatedSearchBar(
+                                query = searchQuery,
+                                onQueryChange = {  }
+                            )
+                        }
 
-                item {
-                    AnimatedMangaPager(
-                        mangas = uiState.mangaList.take(5),
-                        onClick = onClick
-                    )
-                }
+                        item {
+                            AnimatedCategoryChips(
+                                categories = tags,
+                                selectedCategory = selectedCategory,
+                                onCategorySelected = { }
+                            )
+                        }
 
-                item {
-                    SectionHeader(title = "Trending Now")
-                }
+                        item {
+                            AnimatedMangaPager(
+                                mangas = mangaList.take(5),
+                                onClick = onClick
+                            )
+                        }
 
-                item {
-                    AnimatedMangaCarousel(
-                        onClick = onMangaCarouselClick
-                    )
-                }
+                        item {
+                            SectionHeader(title = "Trending Now")
+                        }
 
-                item {
-                    SectionHeader(title = "Popular This Week")
-                }
+                        item {
+                            AnimatedMangaCarousel(
+                                mangas = mangaList,
+                                onClick = onMangaCarouselClick
+                            )
+                        }
 
-                item {
-                    AnimatedMangaCarousel(
-//                        mangas = uiState.mangaList.reversed(),
-                        onClick = onMangaCarouselClick
-                    )
+                        item {
+                            SectionHeader(title = "Popular This Week")
+                        }
+
+                        item {
+                            AnimatedMangaCarousel(
+                                mangas = mangaList,
+                                onClick = onMangaCarouselClick
+                            )
+                        }
+                    }
+
+                    AppBottomNavigationBar()
                 }
             }
-        }
 
-        if (uiState.isLoading) {
-            LoadingShimmer()
+            is MangaHomeScreenUIState.Error -> {
+                // Show error UI
+                Text(
+                    text = state.message,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                )
+            }
         }
     }
 }

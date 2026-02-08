@@ -3,9 +3,9 @@ package com.example.mangary3.data.local.entities.manga
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 
-@Entity(tableName = Constants.MANGA_TABLE_NAME)
+@Entity(tableName = APIConstants.MANGA_TABLE_NAME)
 data class LocalManga(
     @PrimaryKey val id: Int,
     @ColumnInfo val title: String,

@@ -1,6 +1,6 @@
 package com.example.mangary3.domain.model
 
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 import timber.log.Timber
 
 data class Manga(
@@ -11,9 +11,14 @@ data class Manga(
 ) {
     fun getCoverArtUrl(): String? {
         try {
-            val coverArt = relationship.find { it.type == Constants.MANGA_COVER_ART_KEY }
-            val fileName = coverArt?.attributes?.fileName ?: return null
-            return Constants.MANGA_COVER_IMAG + id + "/" + fileName
+            val coverArt = relationship.find { it.type == APIConstants.MANGA_COVER_ART_KEY }
+            val fileName = coverArt?.attributes?.fileName
+            if (fileName.isNullOrEmpty()) {
+                Timber.e("Cover art fileName is null or empty for manga id: $id")
+                return null
+            }
+            Timber.d("Cover art URL: ${APIConstants.MANGA_COVER_IMAG + id + "/" + fileName}")
+            return APIConstants.MANGA_COVER_IMAG + id + "/" + fileName
         } catch (e: Exception) {
             Timber.e("Fail to get cover art: $e")
             return null

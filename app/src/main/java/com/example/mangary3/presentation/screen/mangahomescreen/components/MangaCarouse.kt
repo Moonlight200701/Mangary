@@ -14,14 +14,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,21 +27,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.mangary3.core.constants.MangaConstants
 import com.example.mangary3.domain.model.Manga
-import com.example.mangary3.presentation.viewmodel.mangahomeviewmodel.MangaHomeViewModel
 
 @Composable
 fun AnimatedMangaCarousel(
     modifier: Modifier = Modifier,
-    viewModel: MangaHomeViewModel = hiltViewModel(),
+    mangas: List<Manga>,
     onClick: (Manga) -> Unit,
 ) {
-    val uiState by viewModel.mangaPagerUiState.collectAsState()
     Column(modifier = modifier) {
-        if (uiState.mangaList.isEmpty()) {
+        if (mangas.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,8 +53,8 @@ fun AnimatedMangaCarousel(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(uiState.mangaList, key = { it.id }) { manga ->
-                    AnimatedMangaItem(manga = manga, onClick = onClick)
+                items(mangas.size, key = { it }) { index ->
+                    AnimatedMangaItem(manga = mangas[index], onClick = onClick)
                 }
             }
         }
@@ -84,7 +79,7 @@ fun AnimatedMangaItem(manga: Manga, onClick: (Manga) -> Unit) {
         ) {
             GlideImage(
                 model = manga.getCoverArtUrl() ?: "",
-                contentDescription = manga.attributes.title["en"],
+                contentDescription = manga.attributes.title[MangaConstants.MANGA_NAME_KEY],
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(120.dp, 180.dp)
@@ -92,7 +87,7 @@ fun AnimatedMangaItem(manga: Manga, onClick: (Manga) -> Unit) {
                     .clickable(onClick = { onClick(manga) })
             )
             Text(
-                text = manga.attributes.title["en"] ?: "No title",
+                text = manga.attributes.title[MangaConstants.MANGA_NAME_KEY] ?: "No title",
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,

@@ -1,4 +1,4 @@
-package com.example.mangary3.presentation.screen.mangahomescreen.components
+package com.example.mangary3.presentation.screen.mangasearchscreen.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -33,8 +33,8 @@ import com.example.mangary3.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimatedSearchBar(
-    query: String,
-    onQueryChange: (String) -> Unit,
+    query: String = "",
+    onQueryChange: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }

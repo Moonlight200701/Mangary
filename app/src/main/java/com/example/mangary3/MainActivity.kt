@@ -25,9 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 import com.example.mangary3.core.components.DrawerContent
-import com.example.mangary3.presentation.navigation.AppBottomNavigationBar
 import com.example.mangary3.presentation.navigation.NavigateScreen
 import com.example.mangary3.presentation.theme.Mangary3Theme
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +56,7 @@ fun MainApplication(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val routesWithAppBar = setOf(
-        Constants.MANGA_HOME_SCREEN
+        APIConstants.MANGA_HOME_SCREEN
     )
     val shouldShowAppBar = currentRoute in routesWithAppBar
     Surface(
@@ -98,7 +97,7 @@ fun MainApplication(navController: NavHostController) {
                         .padding(padding)
                 ) {
                     NavigateScreen(navController)
-                    AppBottomNavigationBar(navController = navController)
+
                 }
             }
         }

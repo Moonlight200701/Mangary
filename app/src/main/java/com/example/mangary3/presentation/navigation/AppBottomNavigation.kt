@@ -20,12 +20,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.mangary3.R
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
+import com.example.mangary3.core.components.rememberDebouncedClick
 
 @Composable
-fun AppBottomNavigationBar(navController: NavHostController) {
+fun AppBottomNavigationBar(
+//    navController: NavHostController
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +46,7 @@ fun AppBottomNavigationBar(navController: NavHostController) {
                 )
                 .clip(RoundedCornerShape(25.dp))
                 .background(Color(0xFF1A1A1A))
-        ){
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -52,12 +54,15 @@ fun AppBottomNavigationBar(navController: NavHostController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val items = listOf(
-                    Triple("Home", R.drawable.home, Constants.MANGA_HOME_SCREEN),
-                    Triple("Detail", R.drawable.menu, Constants.MANGA_DETAIL_SCREEN)
+                    Triple("Home", R.drawable.home, APIConstants.MANGA_HOME_SCREEN),
+                    Triple("Detail", R.drawable.menu, APIConstants.MANGA_DETAIL_SCREEN)
                 )
 
                 items.forEach { currentItem ->
-                    IconButton(onClick = { navController.navigate(currentItem.third) }) {
+                    IconButton(onClick = rememberDebouncedClick {
+
+                    }
+                    ) {
                         Icon(
                             modifier = Modifier.size(24.dp),
                             painter = painterResource(currentItem.second),

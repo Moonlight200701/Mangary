@@ -1,6 +1,6 @@
 package com.example.mangary3.di
 
-import com.example.mangary3.core.Constants
+import com.example.mangary3.core.constants.APIConstants
 import com.example.mangary3.data.remote.MangaAPIService
 import dagger.Module
 import dagger.Provides
@@ -17,7 +17,7 @@ object MangaDatabaseModule {
     @Singleton
     fun provideMangaAPIService(): MangaAPIService{
         return Retrofit.Builder()
-            .baseUrl(Constants.MANGA_DEX_WEB)
+            .baseUrl(APIConstants.MANGA_DEX_WEB)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MangaAPIService::class.java)
