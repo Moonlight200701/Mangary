@@ -4,7 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -45,7 +49,8 @@ import com.example.mangary3.presentation.screen.mangasearchscreen.components.Ani
 fun MangaHomeScreen(
     mangaHomeViewModel: MangaHomeViewModel = hiltViewModel(),
     onClick: () -> Unit = { },
-    onMangaCarouselClick: (Manga) -> Unit = {}
+    onMangaCarouselClick: (Manga) -> Unit = {},
+    onSearchClick: () -> Unit = {}
 ) {
     val uiState by mangaHomeViewModel.uiState.collectAsState()
     val tags by mangaHomeViewModel.tags.collectAsState()
@@ -57,6 +62,25 @@ fun MangaHomeScreen(
         }
     }
 
+    MangaHomeScreenContent(
+        uiState,
+        mangaHomeViewModel,
+        onSearchClick,
+        tags,
+        onClick,
+        onMangaCarouselClick
+    )
+}
+
+@Composable
+private fun MangaHomeScreenContent(
+    uiState: MangaHomeScreenUIState,
+    mangaHomeViewModel: MangaHomeViewModel,
+    onSearchClick: () -> Unit,
+    tags: List<String>,
+    onClick: () -> Unit,
+    onMangaCarouselClick: (Manga) -> Unit
+) {
     PullToRefreshBox(
         isRefreshing = uiState is MangaHomeScreenUIState.Refreshing,
         onRefresh = { mangaHomeViewModel.refresh() },
@@ -100,10 +124,20 @@ fun MangaHomeScreen(
                         verticalArrangement = Arrangement.spacedBy(20.dp)
                     ) {
                         item {
-                            AnimatedSearchBar(
-                                query = searchQuery,
-                                onQueryChange = {  }
-                            )
+                            Box(
+                                modifier = Modifier.clickable { onSearchClick() }
+                            ) {
+                                AnimatedSearchBar(
+                                    query = searchQuery,
+                                    onQueryChange = { },
+                                    modifier = Modifier.clickable(
+                                        onClick = onSearchClick,
+                                        indication = null,
+                                        interactionSource = remember { MutableInteractionSource() }
+                                    ),
+                                    enabled = false
+                                )
+                            }
                         }
 
                         item {

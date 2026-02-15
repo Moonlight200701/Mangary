@@ -10,6 +10,7 @@ class APIConstants {
         const val MANGA_HOME_SCREEN = "manga_home_screen"
         const val MANGA_DETAIL_SCREEN = "manga_detail_screen"
         const val MANGA_READING_SCREEN = "manga_reading_screen"
+        const val MANGA_SEARCH_SCREEN = "manga_search_screen_key"
 
         const val MANGA_FROM_SOURCE = "manga"
         const val MANGA_COVER_IMAG = "https://uploads.mangadex.org/covers/"

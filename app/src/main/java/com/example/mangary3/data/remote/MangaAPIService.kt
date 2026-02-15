@@ -28,4 +28,12 @@ interface MangaAPIService {
     @GET("manga/tag")
     suspend fun getAllTags(): TagResponseDTO
 
+    @GET("manga")
+    suspend fun searchMangasFromMangaDex(
+        @Query("title") title: String = "",
+        @Query("limit") limit: Int = 100,
+        @Query("offset") offset: Int = 0,
+        @Query("includes[]") includes: List<String> = listOf("cover_art")
+    ): MangaResponsesDTO
+
 }

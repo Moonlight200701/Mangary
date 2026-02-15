@@ -8,6 +8,6 @@ class MangaConstants {
         const val MANGA_RELATIONSHIP_FILE_NAME_KEY = "fileName"
         const val MANGA_RELATIONSHIP_KEY = "relationships"
 
-        const val MANGA_NAME_KEY = "en"
+        const val MANGA_NAME_KEY = "ja-ro"
     }
 }

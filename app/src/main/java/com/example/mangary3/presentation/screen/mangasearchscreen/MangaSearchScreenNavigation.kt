@@ -5,13 +5,13 @@ import androidx.navigation.compose.composable
 
 const val MANGA_SEARCH_ROUTE = "manga_search_screen_key"
 
-
 fun NavGraphBuilder.mangaSearchScreen(
-    onClick: () -> Unit
+    onBackClick: () -> Unit
 ){
     composable(MANGA_SEARCH_ROUTE){
         MangaSearchScreen(
-            onSearchEnter = onClick
+            onBackClick = onBackClick,
+            autoFocusSearch = true
         )
     }
 }

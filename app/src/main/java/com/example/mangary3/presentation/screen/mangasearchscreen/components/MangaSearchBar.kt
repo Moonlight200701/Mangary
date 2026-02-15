@@ -19,12 +19,15 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -33,9 +36,11 @@ import com.example.mangary3.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimatedSearchBar(
+    modifier: Modifier = Modifier,
     query: String = "",
     onQueryChange: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    autoFocus: Boolean = false,
+    enabled: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
@@ -46,6 +51,15 @@ fun AnimatedSearchBar(
         )
     )
 
+    val focusRequester = remember { FocusRequester() }
+
+    // Request focus when autoFocus is true
+    LaunchedEffect(autoFocus) {
+        if (autoFocus) {
+            focusRequester.requestFocus()
+        }
+    }
+
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
@@ -53,6 +67,7 @@ fun AnimatedSearchBar(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .scale(scale)
+            .focusRequester(focusRequester)
             .onFocusChanged { it.isFocused },
         placeholder = { Text("Search manga...") },
         leadingIcon = {
@@ -80,7 +95,8 @@ fun AnimatedSearchBar(
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
         ),
-        singleLine = true
+        singleLine = true,
+        enabled = enabled
     )
 }
 

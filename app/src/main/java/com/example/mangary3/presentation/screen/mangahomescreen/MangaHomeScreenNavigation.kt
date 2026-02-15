@@ -5,11 +5,13 @@ import androidx.navigation.compose.composable
 import com.example.mangary3.core.constants.APIConstants
 
 fun NavGraphBuilder.mangaHomeScreen(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onSearchClick: () -> Unit
 ) {
     composable(route = APIConstants.MANGA_HOME_SCREEN){
         MangaHomeScreen(
             onClick = onClick,
+            onSearchClick = onSearchClick
         )
     }
 }
