@@ -72,7 +72,7 @@ fun AnimatedSearchBar(
         placeholder = { Text("Search manga...") },
         leadingIcon = {
             Icon(
-                painter = painterResource(R.drawable.search),
+                painter = painterResource(R.drawable.ic_search),
                 contentDescription = "Search"
             )
         },
@@ -84,7 +84,7 @@ fun AnimatedSearchBar(
             ) {
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
-                        painter = painterResource(R.drawable.menu),
+                        painter = painterResource(R.drawable.ic_menu),
                         contentDescription = "Clear"
                     )
                 }

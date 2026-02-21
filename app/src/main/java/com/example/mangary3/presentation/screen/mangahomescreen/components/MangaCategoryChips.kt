@@ -48,7 +48,7 @@ fun AnimatedCategoryChips(
                 leadingIcon = if (isSelected) {
                     {
                         Icon(
-                            painter = painterResource(R.drawable.home),
+                            painter = painterResource(R.drawable.ic_home),
                             contentDescription = null,
                             modifier = Modifier.size(18.dp)
                         )

@@ -24,12 +24,12 @@ fun TopBar() {
         Row {
             Icon(
                 //ToDo: Replace with another icon
-                painter = painterResource(R.drawable.home),
+                painter = painterResource(R.drawable.ic_home),
                 contentDescription = "Profile",
                 modifier = Modifier.clickable(true) {
                 })
             Spacer(Modifier.weight(1f))
-            Icon(painter = painterResource(R.drawable.home), contentDescription = "Theme")
+            Icon(painter = painterResource(R.drawable.ic_home), contentDescription = "Theme")
         }
     }
 }

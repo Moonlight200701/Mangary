@@ -21,7 +21,5 @@ sealed interface MangaHomeScreenUIState {
 
     data class Error(
         val message: String,
-        val selectedCategory: String = "All",
-        val searchQuery: String = ""
     ) : MangaHomeScreenUIState
 }

@@ -42,7 +42,7 @@ fun MangaSearchScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            painter = painterResource(R.drawable.home),
+                            painter = painterResource(R.drawable.ic_home),
                             contentDescription = "Back"
                         )
                     }
@@ -79,7 +79,7 @@ fun MangaSearchScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // Add your manga items here
+                    //Todo: Add Manga items
                 }
             }
         }

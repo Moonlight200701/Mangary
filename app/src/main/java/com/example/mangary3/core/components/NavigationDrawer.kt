@@ -92,7 +92,7 @@ fun DrawerContent(
 
         // Navigation Items
         DrawerNavigationItem(
-            icon = painterResource(R.drawable.home),
+            icon = painterResource(R.drawable.ic_home),
             label = "Home",
             selected = currentRoute == APIConstants.MANGA_HOME_SCREEN,
             onClick = { onNavigate(APIConstants.MANGA_HOME_SCREEN) }

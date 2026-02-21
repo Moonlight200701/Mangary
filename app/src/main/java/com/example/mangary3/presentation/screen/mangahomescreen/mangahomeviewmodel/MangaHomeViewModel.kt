@@ -3,13 +3,16 @@ package com.example.mangary3.presentation.screen.mangahomescreen.mangahomeviewmo
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mangary3.domain.repository.NetworkRepository
 import com.example.mangary3.domain.usecases.FetchAllTagsUseCase
 import com.example.mangary3.domain.usecases.FetchMangaListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +21,19 @@ class MangaHomeViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val fetchMangaListUseCase: FetchMangaListUseCase,
     private val fetchAllTagsUseCase: FetchAllTagsUseCase,
+    private val networkRepository: NetworkRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<MangaHomeScreenUIState>(MangaHomeScreenUIState.Initial)
     val uiState: StateFlow<MangaHomeScreenUIState> = _uiState.asStateFlow()
 
     private val _tags = MutableStateFlow<List<String>>(emptyList())
     val tags: StateFlow<List<String>> = _tags.asStateFlow()
+
+    val networkStatus: StateFlow<Boolean> = networkRepository.networkStatus.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = true
+    )
 
     init {
         loadManga()
@@ -62,8 +72,10 @@ class MangaHomeViewModel @Inject constructor(
 
                 _uiState.value = MangaHomeScreenUIState.Success(
                     mangaList = mangas,
-                    selectedCategory = (currentState as? MangaHomeScreenUIState.Success)?.selectedCategory ?: "All",
-                    searchQuery = (currentState as? MangaHomeScreenUIState.Success)?.searchQuery ?: ""
+                    selectedCategory = (currentState as? MangaHomeScreenUIState.Success)?.selectedCategory
+                        ?: "All",
+                    searchQuery = (currentState as? MangaHomeScreenUIState.Success)?.searchQuery
+                        ?: ""
                 )
                 _tags.value = tags
             } catch (e: Exception) {

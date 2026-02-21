@@ -27,7 +27,7 @@ fun BackButton(
     ) {
         Row {
             Icon(
-                painter = painterResource(R.drawable.home),
+                painter = painterResource(R.drawable.ic_home),
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier

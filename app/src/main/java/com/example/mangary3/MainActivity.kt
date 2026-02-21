@@ -25,8 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mangary3.core.constants.APIConstants
 import com.example.mangary3.core.components.DrawerContent
+import com.example.mangary3.core.constants.APIConstants
+import com.example.mangary3.presentation.navigation.AppBottomNavigationBar
 import com.example.mangary3.presentation.navigation.NavigateScreen
 import com.example.mangary3.presentation.theme.Mangary3Theme
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,8 +97,8 @@ fun MainApplication(navController: NavHostController) {
                         .fillMaxSize()
                         .padding(padding)
                 ) {
-                    NavigateScreen(navController)
-
+                    NavigateScreen(navController = navController)
+                    AppBottomNavigationBar(navController = navController)
                 }
             }
         }

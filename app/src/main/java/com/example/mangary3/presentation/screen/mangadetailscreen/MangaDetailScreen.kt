@@ -4,6 +4,7 @@ package com.example.mangary3.presentation.screen.mangadetailscreen
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -16,9 +17,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -32,7 +35,9 @@ import com.example.mangary3.data.local.entities.manga.mangaCategories
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MangaDetailScreen() {
+fun MangaDetailScreen(
+    onBackClick: () -> Unit = {}
+) {
     BoxWithConstraints(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -42,14 +47,24 @@ fun MangaDetailScreen() {
         val maxHeight = this.maxHeight
         val topHeight = maxHeight * (topWeight / (topWeight + bottomWeight))
 
-        Column (modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+
             // Top section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(topHeight)
                     .background(Color.DarkGray)
-            )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_home),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(vertical = 0.dp, horizontal = 0.dp)
+                        .size(16.dp)
+                        .clickable(onClick = onBackClick),
+                )
+            }
             // Bottom section
             Box(
                 modifier = Modifier
@@ -120,7 +135,7 @@ fun MangaDetailScreen() {
             painter = painterResource(id = R.drawable.dummy_image),
             contentDescription = "Manga Image",
             modifier = Modifier
-                .width(100.dp)
+                .width(150.dp)
                 .height(200.dp)
                 .offset(x = 20.dp, y = topHeight - 100.dp), // valid inside scope
             contentScale = ContentScale.Crop

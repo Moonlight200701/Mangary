@@ -1,5 +1,10 @@
 package com.example.mangary3.presentation.navigation
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,54 +25,68 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mangary3.R
-import com.example.mangary3.core.constants.APIConstants
 import com.example.mangary3.core.components.rememberDebouncedClick
+import com.example.mangary3.core.constants.APIConstants
 
 @Composable
 fun AppBottomNavigationBar(
-//    navController: NavHostController
+    navController: NavHostController
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.BottomCenter
+    val shouldNotShowDestinations = setOf(
+        APIConstants.MANGA_DETAIL_SCREEN,
+        APIConstants.MANGA_SEARCH_SCREEN
+    )
+    val currentState = navController.currentBackStackEntryAsState().value?.destination?.route
+    val shouldNotShowNavigationBar = currentState in shouldNotShowDestinations
+    AnimatedVisibility(
+        visible = !shouldNotShowNavigationBar,
+        enter = fadeIn() + slideInHorizontally { -it },
+        exit = fadeOut() + slideOutHorizontally { -it }
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.85f)
-                .height(64.dp)
-                .shadow(
-                    elevation = 15.dp,
-                    shape = RoundedCornerShape(25.dp),
-                    ambientColor = Color.Black,
-                    spotColor = Color.Black
-                )
-                .clip(RoundedCornerShape(25.dp))
-                .background(Color(0xFF1A1A1A))
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomCenter
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth(0.85f)
+                    .height(64.dp)
+                    .shadow(
+                        elevation = 15.dp,
+                        shape = RoundedCornerShape(25.dp),
+                        ambientColor = Color.Black,
+                        spotColor = Color.Black
+                    )
+                    .clip(RoundedCornerShape(25.dp))
+                    .background(Color(0xFF1A1A1A))
             ) {
-                val items = listOf(
-                    Triple("Home", R.drawable.home, APIConstants.MANGA_HOME_SCREEN),
-                    Triple("Detail", R.drawable.menu, APIConstants.MANGA_DETAIL_SCREEN)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    val items = listOf(
+                        Triple("Home", R.drawable.ic_home, APIConstants.MANGA_HOME_SCREEN),
+                        Triple("Detail", R.drawable.ic_menu, APIConstants.MANGA_DETAIL_SCREEN)
+                    )
 
-                items.forEach { currentItem ->
-                    IconButton(onClick = rememberDebouncedClick {
+                    items.forEach { currentItem ->
+                        IconButton(onClick = rememberDebouncedClick {
 
-                    }
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(24.dp),
-                            painter = painterResource(currentItem.second),
-                            contentDescription = currentItem.first
-                        )
+                        }
+                        ) {
+                            Icon(
+                                modifier = Modifier.size(24.dp),
+                                painter = painterResource(currentItem.second),
+                                contentDescription = currentItem.first
+                            )
+                        }
                     }
                 }
             }
