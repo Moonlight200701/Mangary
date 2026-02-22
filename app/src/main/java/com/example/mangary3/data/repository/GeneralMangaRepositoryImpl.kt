@@ -6,7 +6,9 @@ import com.example.mangary3.data.remote.dto.MangaTagDTO
 import com.example.mangary3.domain.repository.GeneralMangaRepository
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GeneralMangaRepositoryImpl @Inject constructor(private val mangaApi: MangaAPIService) :
     GeneralMangaRepository {
     override suspend fun getMangas(): List<MangaDTO> =

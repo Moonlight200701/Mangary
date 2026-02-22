@@ -9,5 +9,9 @@ class MangaConstants {
         const val MANGA_RELATIONSHIP_KEY = "relationships"
 
         const val MANGA_NAME_KEY = "ja-ro"
+        const val MANGA_ARGUMENT_KEY = "manga_argument_key"
+        const val MANGA_ID_KEY = "manga_id"
+        const val MANGA_TITLE_KEY = "manga_title"
+        const val MANGA_COVER_URL_KEY = "manga_cover_url"
     }
 }

@@ -1,8 +1,10 @@
 package com.example.mangary3.domain.model
 
 import com.example.mangary3.core.constants.APIConstants
+import kotlinx.serialization.Serializable
 import timber.log.Timber
 
+@Serializable
 data class Manga(
     val id: String,
     val type: String,
@@ -11,8 +13,7 @@ data class Manga(
 ) {
     fun getCoverArtUrl(): String? {
         try {
-            val coverArt = relationship.find { it.type == APIConstants.MANGA_COVER_ART_KEY }
-            val fileName = coverArt?.attributes?.fileName
+            val fileName = relationship.firstOrNull { it.type == APIConstants.MANGA_COVER_ART_KEY }?.attributes?.fileName
             if (fileName.isNullOrEmpty()) {
                 Timber.e("Cover art fileName is null or empty for manga id: $id")
                 return null

@@ -54,7 +54,7 @@ fun AnimatedMangaCarousel(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(mangas.size, key = { it }) { index ->
-                    AnimatedMangaItem(manga = mangas[index], onClick = onClick)
+                    AnimatedMangaItem(manga = mangas[index], onClick = { onClick(mangas[index]) })
                 }
             }
         }

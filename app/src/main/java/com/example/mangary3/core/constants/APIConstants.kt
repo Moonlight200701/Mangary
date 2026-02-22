@@ -8,7 +8,7 @@ class APIConstants {
         const val MANGA_TABLE_NAME = "Manga_table"
 
         const val MANGA_HOME_SCREEN = "manga_home_screen"
-        const val MANGA_DETAIL_SCREEN = "manga_detail_screen"
+        const val MANGA_DETAIL_SCREEN = "manga_detail_screen/{${MangaConstants.MANGA_ID_KEY}}/{${MangaConstants.MANGA_TITLE_KEY}}/{${MangaConstants.MANGA_COVER_URL_KEY}}"
         const val MANGA_READING_SCREEN = "manga_reading_screen"
         const val MANGA_SEARCH_SCREEN = "manga_search_screen_key"
 
